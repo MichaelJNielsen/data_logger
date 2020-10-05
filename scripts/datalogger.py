@@ -3,20 +3,21 @@ import rospy
 import signal
 import json
 import datetime
+import time
 from std_msgs.msg import String
 from geometry_msgs.msg import Transform
 
-filename = input("enter filename enclosed in quotation marks. ")
+filename = input("enter desired filename. ")
 
 date = datetime.date.today()
-time = datetime.datetime.now().time()
+clockstamp = datetime.datetime.now().time()
 
 data = {
     "test id": 
 	{
 	"name": filename,
 	"date": int(date.strftime("%Y%m%d")),
-	"start time": int(time.strftime("%H%M%S"))
+	"start time": float(clockstamp.strftime("%H%M%S.%f"))
 	},
     "vicon":
 	{
@@ -38,8 +39,8 @@ data = {
 
 def keyboardInterruptHandler(signal,frame):
     print("interrupted")
-    endtime = datetime.datetime.now().time()
-    data["test id"]["duration"] = int(endtime.strftime("%H%M%S"))
+    exacttime_end = time.clock_gettime(time.CLOCK_BOOTTIME)
+    data["test id"]["duration"] = exacttime_end - exacttime_start
 
     with open(filename + ".json", "w") as write_file:
         json.dump(data, write_file, indent=4)
@@ -58,6 +59,7 @@ def callback(sensor_data):
     data["vicon"]["rotation"]["z"].append(sensor_data.rotation.z)
     data["vicon"]["rotation"]["w"].append(sensor_data.rotation.w)
     
+exacttime_start = time.clock_gettime(time.CLOCK_BOOTTIME)
 
 def listener():
 
