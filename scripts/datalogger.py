@@ -11,6 +11,7 @@ filename = input("enter desired filename. ")
 
 date = datetime.date.today()
 clockstamp = datetime.datetime.now().time()
+exacttime_start = time.clock_gettime(time.CLOCK_BOOTTIME)
 
 data = {
     "test id": 
@@ -58,8 +59,6 @@ def callback(sensor_data):
     data["vicon"]["rotation"]["y"].append(sensor_data.rotation.y)
     data["vicon"]["rotation"]["z"].append(sensor_data.rotation.z)
     data["vicon"]["rotation"]["w"].append(sensor_data.rotation.w)
-    
-exacttime_start = time.clock_gettime(time.CLOCK_BOOTTIME)
 
 def listener():
 
