@@ -11,6 +11,7 @@ filename = input("enter desired filename. ")
 
 date = datetime.date.today()
 clockstamp = datetime.datetime.now().time()
+exacttime_start = time.time()
 
 data = {
     "test id": 
@@ -39,7 +40,7 @@ data = {
 
 def keyboardInterruptHandler(signal,frame):
     print("interrupted")
-    exacttime_end = time.clock_gettime(time.CLOCK_BOOTTIME)
+    exacttime_end = time.time()
     data["test id"]["duration"] = exacttime_end - exacttime_start
 
     with open(filename + ".json", "w") as write_file:
@@ -58,8 +59,6 @@ def callback(sensor_data):
     data["vicon"]["rotation"]["y"].append(sensor_data.rotation.y)
     data["vicon"]["rotation"]["z"].append(sensor_data.rotation.z)
     data["vicon"]["rotation"]["w"].append(sensor_data.rotation.w)
-    
-exacttime_start = time.clock_gettime(time.CLOCK_BOOTTIME)
 
 def listener():
 
